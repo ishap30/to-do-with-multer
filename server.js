@@ -1,35 +1,28 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import connectDB from "./src/config/db.js";
 import todoRoutes from "./src/routes/todoRoutes.js";
 
 dotenv.config();
 connectDB();
 
-// ✅ Auto-create uploads folder if it doesn't exist
-if (!fs.existsSync("uploads")) {
-  fs.mkdirSync("uploads");
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// ✅ Fixed CORS origin — matches React dev server port 3001
-app.use(cors({
-  origin: "http://localhost:3000",
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
-// ✅ Serve uploaded images
-app.use("/uploads", express.static("uploads"));
+// Serve uploaded files statically
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ✅ Routes
+// Routes
 app.use("/todos", todoRoutes);
 
-// Health check
 app.get("/", (req, res) => {
   res.json({ message: "Personal Todo API is running 🚀" });
 });
