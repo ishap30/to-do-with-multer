@@ -20,11 +20,11 @@ const todoSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
-
-    // ✅ NEW FIELD (for multer uploads)
-    image: {
-      type: String,
-      default: null, // will store file path like "uploads/123.png"
+    attachment: {
+      filename: { type: String, default: null },
+      originalname: { type: String, default: null },
+      mimetype: { type: String, default: null },
+      size: { type: Number, default: null },
     },
   },
   { timestamps: true }
